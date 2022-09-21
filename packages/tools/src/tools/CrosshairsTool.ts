@@ -699,7 +699,14 @@ class CrosshairsTool extends AnnotationTool {
     );
 
     const data = viewportAnnotation.data;
+
+    console.log('toolCenter: ', this.toolCenter);
+    (window as any).ENABLE_DEBUG = true;
     const crosshairCenterCanvas = viewport.worldToCanvas(this.toolCenter);
+    (window as any).ENABLE_DEBUG = false;
+    console.log(
+      '------------------------------------------------------------------'
+    );
 
     const otherViewportAnnotations =
       this._filterAnnotationsByUniqueViewportOrientations(
@@ -762,7 +769,7 @@ class CrosshairsTool extends AnnotationTool {
       const canvasBox = [0, 0, clientWidth, clientHeight];
 
       const pointCanvas0 = viewport.worldToCanvas(pointWorld0);
-
+      // console.log('otherViewportCenterWorld: ', otherViewportCenterWorld);
       const otherViewportCenterCanvas = viewport.worldToCanvas(
         otherViewportCenterWorld
       );
@@ -836,12 +843,11 @@ class CrosshairsTool extends AnnotationTool {
       const refLinePointTwo = vec2.create();
       const refLinePointThree = vec2.create();
       const refLinePointFour = vec2.create();
-
+      // console.log(crosshairCenterCanvas, otherViewportCenterCanvas)
       let refLinesCenter = vec2.clone(crosshairCenterCanvas);
       if (!otherViewportDraggableRotatable || !otherViewportControllable) {
         refLinesCenter = vec2.clone(otherViewportCenterCanvas);
       }
-
       vec2.add(refLinePointOne, refLinesCenter, canvasVectorFromCenterStart);
       vec2.add(refLinePointTwo, refLinesCenter, canvasVectorFromCenterLong);
       vec2.subtract(

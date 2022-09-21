@@ -810,10 +810,7 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
       offscreenMultiRenderWindow.getOpenGLRenderWindow();
     const size = openGLRenderWindow.getSize();
     const devicePixelRatio = window.devicePixelRatio || 1;
-    const canvasPosWithDPR = [
-      canvasPos[0] * devicePixelRatio,
-      canvasPos[1] * devicePixelRatio,
-    ];
+    const canvasPosWithDPR = [canvasPos[0], canvasPos[1]];
     const displayCoord = [
       canvasPosWithDPR[0] + this.sx,
       canvasPosWithDPR[1] + this.sy,
@@ -844,10 +841,12 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
    * @public
    */
   public worldToCanvas = (worldPos: Point3): Point2 => {
+    const enableDebugFlag = (window as any).ENABLE_DEBUG;
+    enableDebugFlag && console.log('worldToCanvas from VolumeViewport');
     const vtkCamera = this.getVtkActiveCamera() as vtkSlabCameraType;
 
     /**
-     * NOTE: this is necessary because we want the coordinate trasformation
+     * NOTE: this is necessary because we want the coordinate transformation
      * respect to the view plane (plane orthogonal to the camera and passing to
      * the focal point).
      *
@@ -880,6 +879,7 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
       ...this.applyFlipTx(worldPos),
       renderer
     );
+    enableDebugFlag && console.log('displayCoord:', displayCoord);
 
     // The y axis display coordinates are inverted with respect to canvas coords
     displayCoord[1] = size[1] - displayCoord[1];
@@ -889,11 +889,10 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
       displayCoord[1] - this.sy,
     ];
 
+    enableDebugFlag && console.log('canvasCoord:', canvasCoord);
     const devicePixelRatio = window.devicePixelRatio || 1;
-    const canvasCoordWithDPR = <Point2>[
-      canvasCoord[0] / devicePixelRatio,
-      canvasCoord[1] / devicePixelRatio,
-    ];
+    enableDebugFlag && console.log('devicePixelRatio:', devicePixelRatio);
+    const canvasCoordWithDPR = <Point2>[canvasCoord[0], canvasCoord[1]];
 
     vtkCamera.setIsPerformingCoordinateTransformation(false);
 
